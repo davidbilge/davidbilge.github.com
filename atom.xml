@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[David Bilge – Blog]]></title>
+  <link href="http://davidbilge.github.com/atom.xml" rel="self"/>
+  <link href="http://davidbilge.github.com/"/>
+  <updated>2013-01-04T21:58:42+01:00</updated>
+  <id>http://davidbilge.github.com/</id>
+  <author>
+    <name><![CDATA[David Bilge]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+</feed>
