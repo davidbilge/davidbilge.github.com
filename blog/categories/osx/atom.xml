@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[David Bilge – Blog]]></title>
-  <link href="http://davidbilge.github.com/atom.xml" rel="self"/>
+  <title><![CDATA[Category: OSX | David Bilge – Blog]]></title>
+  <link href="http://davidbilge.github.com/blog/categories/osx/atom.xml" rel="self"/>
   <link href="http://davidbilge.github.com/"/>
   <updated>2013-01-04T23:31:01+01:00</updated>
   <id>http://davidbilge.github.com/</id>
@@ -22,7 +22,7 @@
 
 <h2>Installing ruby using homebrew</h2>
 
-<p>Being more of a Java guy who has never actually worked with ruby, installing it on my OSX system (Mountain Lion to be precise) was a bit tricky. I am going to break down the necessary steps here, hoping I forgot nothing. By the way: I&#8217;m using <a href="http://mxcl.github.com/homebrew/">homebrew</a>.</p>
+<p>Being more of a Java guy who has never actually worked with ruby, installing it on my OSX system (Mountain Lion to be precise) was a bit tricky. I am going to break down the necessary steps here, hoping I forgot nothing. By the way: I'm using <a href="http://mxcl.github.com/homebrew/">homebrew</a>.</p>
 
 <p>But, OSX ships with ruby, you say. That is correct, but this is a dated version (1.8.7 on my system) which is not compatible with Octopress: They require 1.9.3. Thus, we need a current ruby installation to replace the included one. So:</p>
 
@@ -31,19 +31,16 @@
 
 <p>But now, doing <code>ruby --version</code> still outputs <code>ruby 1.8.7 (2012-02-08 patchlevel 358) [universal-darwin12.0]</code>. What went wrong? If you look at <code>/etc/paths</code> you will notice, that <code>/usr/local/bin</code> (the directory homebrew symlinks its binaries into) is at the bottom, making it lose against system defaults (the preinstalled ruby is located in <code>/usr/bin/</code> which is higher up in the list). I ended up editing <code>/etc/paths</code> to include <code>/usr/local/bin</code> at the top, as pointed out <a href="http://stackoverflow.com/a/8731098/537738">here</a>. Keep in mind that this will generally change precedence of homebrew binaries vs the preinstalled ones - but you might want this, anyways.</p>
 
-<p>Now, we get</p>
+<p>Now, we get
+<code>
+$ ruby --version
+ruby 1.9.3p362 (2012-12-25 revision 38607) [x86_64-darwin12.2.0]
+</code>
+Nice!</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ ruby --version
-</span><span class='line'>ruby 1.9.3p362 (2012-12-25 revision 38607) [x86_64-darwin12.2.0]</span></code></pre></td></tr></table></div></figure>
+<p>An alternative would have been to use RVM or rbenv to install ruby. But RVM is not available in homebrew and rbenv requires "the real gcc" which does not ship with XCode anymore (they use LLVM/clang now). So I decided to use homebrew all the way.</p>
 
-
-<p>Nice!</p>
-
-<p>An alternative would have been to use RVM or rbenv to install ruby. But RVM is not available in homebrew and rbenv requires &#8220;the real gcc&#8221; which does not ship with XCode anymore (they use LLVM/clang now). So I decided to use homebrew all the way.</p>
-
-<h3>But wait, there&#8217;s more!</h3>
+<h3>But wait, there's more!</h3>
 
 <p>Ruby works fine by now, but there is still something left to do if we want to install gems (which is what we will need to do in order to get Octopress up and running). Using the current setup, if you install a gem like this:</p>
 
@@ -55,36 +52,26 @@
 <pre><code>$ bundler
 </code></pre>
 
-<p>you will note that the binary is not found. Again, the <code>PATH</code> is the culprit: the gem-directory is not on the path. Homebrew helpfully says:</p>
+<p>you will note that the binary is not found. Again, the <code>PATH</code> is the culprit: the gem-directory is not on the path. Homebrew helpfully says:
+```
+$ brew info ruby
+[...]
+==> Caveats
+NOTE: By default, gem installed binaries will be placed into:
+  /usr/local/Cellar/ruby/1.9.3-p362/bin</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ brew info ruby
-</span><span class='line'>[...]
-</span><span class='line'>==&gt; Caveats
-</span><span class='line'>NOTE: By default, gem installed binaries will be placed into:
-</span><span class='line'>  /usr/local/Cellar/ruby/1.9.3-p362/bin
-</span><span class='line'>
-</span><span class='line'>You may want to add this to your PATH.</span></code></pre></td></tr></table></div></figure>
-
-
-<p>But I feel that adding the directory containing the ruby version to the path is not a particularly good idea. Instead, I followed the advice <a href="http://superuser.com/a/527534/83513">here</a> and added the following line to my <code>~/.bash_profile</code></p>
+<p>You may want to add this to your PATH.
+<code>``
+But I feel that adding the directory containing the ruby version to the path is not a particularly good idea. Instead, I followed the advice [here](http://superuser.com/a/527534/83513) and added the following line to my</code>~/.bash_profile`</p>
 
 <pre><code>export PATH=$(cd $(which gem)/..; pwd):$PATH
 </code></pre>
 
-<p>In a new Terminal session, you should now get something like</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ echo $PATH
-</span><span class='line'>/usr/local/Cellar/ruby/1.9.3-p362/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin</span></code></pre></td></tr></table></div></figure>
-
+<p>In a new Terminal session, you should now get something like
+<code>
+$ echo $PATH
+/usr/local/Cellar/ruby/1.9.3-p362/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin
+</code></p>
 
 <p>To install ruby on linux, you will probably just do something like</p>
 
@@ -93,9 +80,9 @@
 
 <h2>Installing Octopress</h2>
 
-<p>For installing Octopress, I followed the <a href="http://octopress.org/docs/setup/">directions</a> on their site starting from &#8220;Setup Octopress&#8221;.</p>
+<p>For installing Octopress, I followed the <a href="http://octopress.org/docs/setup/">directions</a> on their site starting from "Setup Octopress".</p>
 
-<p>After that, I did what they said <a href="http://octopress.org/docs/deploying/github/">here</a> in order to deploy to github pages. What I found irritating: You actually have to create a repo on github called something like &#8220;myfantasticblog.github.com&#8221; if you want your fantastic blog to be available via <code>http://myfantasticblog.github.com</code> lateron. Apparently, github uses some magic with the repo name here.</p>
+<p>After that, I did what they said <a href="http://octopress.org/docs/deploying/github/">here</a> in order to deploy to github pages. What I found irritating: You actually have to create a repo on github called something like "myfantasticblog.github.com" if you want your fantastic blog to be available via <code>http://myfantasticblog.github.com</code> lateron. Apparently, github uses some magic with the repo name here.</p>
 
 <p>After making the first deployment, I actually saw - nothing. This was because I did not have the required gems on my path (see above) and <code>rake generate</code> dit not actually generate any files. And I seem to have missed the error messages somehow.</p>
 
