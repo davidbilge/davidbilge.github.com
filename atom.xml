@@ -4,7 +4,7 @@
   <title><![CDATA[David Bilge – Blog]]></title>
   <link href="http://davidbilge.github.com/atom.xml" rel="self"/>
   <link href="http://davidbilge.github.com/"/>
-  <updated>2013-01-04T23:31:01+01:00</updated>
+  <updated>2013-01-04T23:33:50+01:00</updated>
   <id>http://davidbilge.github.com/</id>
   <author>
     <name><![CDATA[David Bilge]]></name>
@@ -108,7 +108,7 @@
 <ul>
 <li><code>rake generate</code> generate the html pages that can then be deployed</li>
 <li><code>rake deploy</code> deploy the generated page to github</li>
-<li><code>rake preview</code> run a local webserver you can use to preview your page (access via [http://localhost:4000]). This is really nice, as it automatically updates. So, if you just leave it running and update a post, you can just refresh your browser immediately.</li>
+<li><code>rake preview</code> run a local webserver you can use to preview your page (access via <a href="http://localhost:4000">http://localhost:4000</a>). This is really nice, as it automatically updates. So, if you just leave it running and update a post, you can just refresh your browser immediately.</li>
 <li><code>rake new_post</code> create a new posting (a markdown file per default). The file is saved into the <code>source/_posts/</code> subdirectory</li>
 </ul>
 
