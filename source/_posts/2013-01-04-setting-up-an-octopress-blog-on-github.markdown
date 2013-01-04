@@ -64,5 +64,5 @@ There are some commands that you will need to use regularly:
 
 * `rake generate` generate the html pages that can then be deployed
 * `rake deploy` deploy the generated page to github
-* `rake preview` run a local webserver you can use to preview your page (access via [http://localhost:4000]). This is really nice, as it automatically updates. So, if you just leave it running and update a post, you can just refresh your browser immediately.
+* `rake preview` run a local webserver you can use to preview your page (access via [http://localhost:4000](http://localhost:4000)). This is really nice, as it automatically updates. So, if you just leave it running and update a post, you can just refresh your browser immediately.
 * `rake new_post` create a new posting (a markdown file per default). The file is saved into the `source/_posts/` subdirectory
