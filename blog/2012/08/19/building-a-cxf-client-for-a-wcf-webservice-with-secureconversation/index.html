@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>David Bilge – Blog</title>
+  <title>Building a CXF client for a WCF webservice with SecureConversation - David Bilge – Blog</title>
   <meta name="author" content="David Bilge">
 
   
-  <meta name="description" content="I just installed Octopress to deploy a blog to github on my OSX system and found this process not exactly smooth - so I decided to write it down. &hellip;">
+  <meta name="description" content="Although RESTful webservices and JSON is what everyone seems to be using nowadays, SOAP is still very present. But while SOAP itself is a very &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://davidbilge.github.com/">
+  <link rel="canonical" href="http://davidbilge.github.com/blog/2012/08/19/building-a-cxf-client-for-a-wcf-webservice-with-secureconversation/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -62,144 +62,12 @@
 </nav>
   <div id="main">
     <div id="content">
-      <div class="blog-index">
+      <div>
+<article class="hentry" role="article">
   
-  
-  
-    <article>
-      
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2013/01/04/setting-up-an-octopress-blog-on-github/">Setting Up an Octopress Blog on Github From OSX</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-01-04T22:11:00+01:00" pubdate data-updated="true">Jan 4<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I just installed <a href="http://octopress.org">Octopress</a> to deploy a blog to github on my OSX system and found this process not exactly smooth - so I decided to write it down.</p>
-
-<h2>Installing ruby using homebrew</h2>
-
-<p>Being more of a Java guy who has never actually worked with ruby, installing it on my OSX system (Mountain Lion to be precise) was a bit tricky. I am going to break down the necessary steps here, hoping I forgot nothing. By the way: I&#8217;m using <a href="http://mxcl.github.com/homebrew/">homebrew</a>.</p>
-
-<p>But, OSX ships with ruby, you say. That is correct, but this is a dated version (1.8.7 on my system) which is not compatible with Octopress: They require 1.9.3. Thus, we need a current ruby installation to replace the included one. So:</p>
-
-<pre><code>$ brew install ruby
-</code></pre>
-
-<p>But now, doing <code>ruby --version</code> still outputs <code>ruby 1.8.7 (2012-02-08 patchlevel 358) [universal-darwin12.0]</code>. What went wrong? If you look at <code>/etc/paths</code> you will notice, that <code>/usr/local/bin</code> (the directory homebrew symlinks its binaries into) is at the bottom, making it lose against system defaults (the preinstalled ruby is located in <code>/usr/bin/</code> which is higher up in the list). I ended up editing <code>/etc/paths</code> to include <code>/usr/local/bin</code> at the top, as pointed out <a href="http://stackoverflow.com/a/8731098/537738">here</a>. Keep in mind that this will generally change precedence of homebrew binaries vs the preinstalled ones - but you might want this, anyways.</p>
-
-<p>Now, we get</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ ruby --version
-</span><span class='line'>ruby 1.9.3p362 (2012-12-25 revision 38607) [x86_64-darwin12.2.0]</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Nice!</p>
-
-<p>An alternative would have been to use RVM or rbenv to install ruby. But RVM is not available in homebrew and rbenv requires &#8220;the real gcc&#8221; which does not ship with XCode anymore (they use LLVM/clang now). So I decided to use homebrew all the way.</p>
-
-<h3>But wait, there&#8217;s more!</h3>
-
-<p>Ruby works fine by now, but there is still something left to do if we want to install gems (which is what we will need to do in order to get Octopress up and running). Using the current setup, if you install a gem like this:</p>
-
-<pre><code>$ gem install bundler
-</code></pre>
-
-<p>And try to execute it using</p>
-
-<pre><code>$ bundler
-</code></pre>
-
-<p>you will note that the binary is not found. Again, the <code>PATH</code> is the culprit: the gem-directory is not on the path. Homebrew helpfully says:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ brew info ruby
-</span><span class='line'>[...]
-</span><span class='line'>==&gt; Caveats
-</span><span class='line'>NOTE: By default, gem installed binaries will be placed into:
-</span><span class='line'>  /usr/local/Cellar/ruby/1.9.3-p362/bin
-</span><span class='line'>
-</span><span class='line'>You may want to add this to your PATH.</span></code></pre></td></tr></table></div></figure>
-
-
-<p>But I feel that adding the directory containing the ruby version to the path is not a particularly good idea. Instead, I followed the advice <a href="http://superuser.com/a/527534/83513">here</a> and added the following line to my <code>~/.bash_profile</code></p>
-
-<pre><code>export PATH=$(cd $(which gem)/..; pwd):$PATH
-</code></pre>
-
-<p>In a new Terminal session, you should now get something like</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ echo $PATH
-</span><span class='line'>/usr/local/Cellar/ruby/1.9.3-p362/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin</span></code></pre></td></tr></table></div></figure>
-
-
-<p>To install ruby on linux, you will probably just do something like</p>
-
-<pre><code>sudo apt-get install ruby
-</code></pre>
-
-<h2>Installing Octopress</h2>
-
-<p>For installing Octopress, I followed the <a href="http://octopress.org/docs/setup/">directions</a> on their site starting from &#8220;Setup Octopress&#8221;.</p>
-
-<p>After that, I did what they said <a href="http://octopress.org/docs/deploying/github/">here</a> in order to deploy to github pages. What I found irritating: You actually have to create a repo on github called something like &#8220;myfantasticblog.github.com&#8221; if you want your fantastic blog to be available via <code>http://myfantasticblog.github.com</code> lateron. Apparently, github uses some magic with the repo name here.</p>
-
-<p>After making the first deployment, I actually saw - nothing. This was because I did not have the required gems on my path (see above) and <code>rake generate</code> dit not actually generate any files. And I seem to have missed the error messages somehow.</p>
-
-<p>Everything else went pretty smoothly.</p>
-
-<h2>Useful Octopress commands</h2>
-
-<p>There are some commands that you will need to use regularly:</p>
-
-<ul>
-<li><code>rake generate</code> generate the html pages that can then be deployed</li>
-<li><code>rake deploy</code> deploy the generated page to github</li>
-<li><code>rake preview</code> run a local webserver you can use to preview your page (access via <a href="http://localhost:4000">http://localhost:4000</a>). This is really nice, as it automatically updates. So, if you just leave it running and update a post, you can just refresh your browser immediately.</li>
-<li><code>rake new_post</code> create a new posting (a markdown file per default). The file is saved into the <code>source/_posts/</code> subdirectory</li>
-</ul>
-
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/08/19/building-a-cxf-client-for-a-wcf-webservice-with-secureconversation/">Building a CXF Client for a WCF Webservice With SecureConversation</a></h1>
+      <h1 class="entry-title">Building a CXF Client for a WCF Webservice With SecureConversation</h1>
     
     
       <p class="meta">
@@ -222,7 +90,7 @@
   </header>
 
 
-  <div class="entry-content"><p>Although RESTful webservices and JSON is what everyone seems to be using nowadays, SOAP is still very present. But while SOAP itself is a very established standard, its addons – like WS-SecureConversation – seem to be interpreted differently by different frameworks. And apparently, this sometimes makes interoperability quite a difficult thing to accomplish (which I did, in the end).</p>
+<div class="entry-content"><p>Although RESTful webservices and JSON is what everyone seems to be using nowadays, SOAP is still very present. But while SOAP itself is a very established standard, its addons – like WS-SecureConversation – seem to be interpreted differently by different frameworks. And apparently, this sometimes makes interoperability quite a difficult thing to accomplish (which I did, in the end).</p>
 
 <p>But, I’m getting ahead of myself: What I wanted to accomplish was to have a Java-client talk to a .net-Webservice with WS-SecureConversation enabled. To be more specific, I decided to use <a href="http://cxf.apache.org/">Apache CXF</a> because Spring-WS does not support WS-SecureConversation, apparently (citation needed). I did not explore Metro or Axis, but they might have been valid options, too. The endpoint was created using standard WCF, as far as I know. I ran into quite the number of problems on my way to success which made me want to write this blog post.</p>
 
@@ -580,18 +448,59 @@ MTOM has to be deactivated on the server side, so it looks like you&#8217;re out
 </ul>
 
 </div>
+
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">David Bilge</span></span>
+
+      
+
+
+
+
+
+
+
+
   
 
 
-    </article>
+<time datetime="2012-08-19T13:25:00+02:00" pubdate data-updated="true">Aug 19<span>th</span>, 2012</time>
+      
+
+<span class="categories">
   
-  <div class="pagination">
+    <a class='category' href='/blog/categories/cxf/'>CXF</a>, <a class='category' href='/blog/categories/java/'>Java</a>, <a class='category' href='/blog/categories/soap/'>SOAP</a>
+  
+</span>
+
+
+    </p>
     
-    <a href="/blog/archives">Blog Archives</a>
-    
-  </div>
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://davidbilge.github.com/blog/2012/08/19/building-a-cxf-client-for-a-wcf-webservice-with-secureconversation/" data-via="" data-counturl="http://davidbilge.github.com/blog/2012/08/19/building-a-cxf-client-for-a-wcf-webservice-with-secureconversation/" >Tweet</a>
+  
+  
+  
 </div>
+
+    
+    <p class="meta">
+      
+      
+        <a class="basic-alignment right" href="/blog/2013/01/04/setting-up-an-octopress-blog-on-github/" title="Next Post: Setting up an Octopress blog on github from OSX">Setting up an Octopress blog on github from OSX &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
 <aside class="sidebar">
   
     <section>
@@ -616,6 +525,7 @@ MTOM has to be deactivated on the server side, so it looks like you&#8217;re out
 
   
 </aside>
+
 
     </div>
   </div>
