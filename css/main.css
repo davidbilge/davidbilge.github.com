@@ -1,0 +1,75 @@
+@import url(http://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+html,body {	
+	font-family: 'Ubuntu Mono';
+	color: #BFC0C0;
+	background-color: #444545;
+}
+
+header {
+	text-align: center;
+}
+
+header h1 {
+	display: inline-block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+a, a:active, a:focus, a:visited{
+	color: #93BEDF;
+}
+
+a:hover {
+	color: #BFC0C0;
+}
+
+
+hr {
+	border-color: #6A6B6B;
+	margin-top: 25px;
+	margin-bottom: 25px;
+}
+
+.db-container {
+	width: 500px;
+	padding-right: 15px;
+	padding-left: 15px;
+	margin-right: auto;
+	margin-left: auto;
+}
+
+.db-container section {
+	padding-left: 75px;
+	padding-right: 75px;
+}
+
+dt, dd {
+	float: left;
+	margin-right: 10px;
+}
+
+dt {
+	clear:both;
+}
+
+footer {
+	color: #6A6B6B;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
